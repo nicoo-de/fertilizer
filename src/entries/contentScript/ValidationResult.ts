@@ -7,6 +7,7 @@ export type TimesheetEntryGap =
   | TimesheetEntryBreak
   | {
       type: "invalidCharacters"
+      invalidCharacters: string
     }
   | {
       type: "ok"

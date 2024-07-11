@@ -7,8 +7,8 @@ export function validateTimesheet(timesheet: Timesheet): ValidationResult[] {
     .slice()
     .sort((a, b) => a.start.diff(b.start))
     .map((currentEntry, index, entries) => {
-      const invalidText = RegExp(/\p{Extended_Pictographic}/u).test(currentEntry.noteText)
-      const gap: TimesheetEntryGap = invalidText ? { type: "invalidCharacters" } :  validateGap(currentEntry, entries[index + 1])
+      const invalidText = RegExp(/\p{Extended_Pictographic}/u).exec(currentEntry.noteText)
+      const gap: TimesheetEntryGap = invalidText ? { type: "invalidCharacters", invalidCharacters: invalidText.join(", ") } :  validateGap(currentEntry, entries[index + 1])
       const note: TimesheetEntryNote = currentEntry.hasNote ? { type: invalidText ? "invalidCharacters" : "ok" } : { type: "missing" }
 
       return {
