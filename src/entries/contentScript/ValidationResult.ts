@@ -6,6 +6,9 @@ export type TimesheetEntryGap =
   | TimesheetEntryOverlap
   | TimesheetEntryBreak
   | {
+      type: "invalidCharacters"
+    }
+  | {
       type: "ok"
     }
 
@@ -23,4 +26,5 @@ export type TimesheetEntryNote =
   | {
       type: "missing"
     }
+  | { type: "invalidCharacters" }
   | { type: "ok" }
