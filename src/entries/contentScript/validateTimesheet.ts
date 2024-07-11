@@ -6,9 +6,11 @@ export function validateEntries(entries: TimesheetEntry[]): ValidationResult[] {
     .slice()
     .sort((a, b) => a.start.diff(b.start))
     .map((currentEntry, index, entries) => {
-      const gap = validateGap(currentEntry, entries[index + 1])
-      const note: TimesheetEntryNote = currentEntry.hasNote ? { type: "ok" } : { type: "missing" }
-
+      const containsInvalidCharacters = validateNoteText(currentEntry.noteText)
+      const gap = validateGap(currentEntry, containsInvalidCharacters, entries[index + 1])
+      const note: TimesheetEntryNote = currentEntry.hasNote ?
+          { type: containsInvalidCharacters ? "invalidCharacter" : "ok" } :
+          { type: "missing" }
       return {
         entry: currentEntry,
         gap,
@@ -17,7 +19,12 @@ export function validateEntries(entries: TimesheetEntry[]): ValidationResult[] {
     })
 }
 
-function validateGap(firstEntry: TimesheetEntry, secondEntry?: TimesheetEntry): TimesheetEntryGap {
+function validateNoteText(noteText: string | null): boolean {
+    return noteText ? RegExp(/\p{Extended_Pictographic}/u).test(noteText) : false
+}
+
+function validateGap(firstEntry: TimesheetEntry, containsInvalidCharacters: boolean, secondEntry?: TimesheetEntry): TimesheetEntryGap {
+  if (containsInvalidCharacters) return {type: "invalidCharacter"};
   if (!secondEntry || !firstEntry.end) return { type: "ok" }
 
   const timeDiff = secondEntry.start.diff(firstEntry.end, "minutes")

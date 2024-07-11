@@ -9,16 +9,16 @@ function findTimesheetElement() {
   return element
 }
 
-function parseTime(text: string) {
+function parseTime(text: string | null) {
+  if(text == null){
+    throw Error("Failed to find timestamp elements in table row")
+  }
   return dayjs(text, "HH:mm")
 }
 
-function findTextContent(tableRow: HTMLElement, selector: string) {
+function findTextContent(tableRow: HTMLElement, selector: string): string | null {
   const result = tableRow.querySelector(selector)
-  if (result === null || result.textContent === null) {
-    throw Error("Failed to find timestamp elements in table row")
-  }
-  return result.textContent
+  return result?.textContent ?? null
 }
 
 export function findTimesheetEntries(): TimesheetEntry[] {
@@ -30,6 +30,7 @@ export function findTimesheetEntries(): TimesheetEntry[] {
     const hasNote = tableRow.querySelector(".notes") !== null
 
     const startTimeText = findTextContent(tableRow, ".entry-timestamp-start")
+    const nodeText = findTextContent(tableRow, ".notes p")
     const endTimeText = findTextContent(tableRow, ".entry-timestamp-end")
 
     const start = parseTime(startTimeText)
@@ -37,9 +38,11 @@ export function findTimesheetEntries(): TimesheetEntry[] {
     const end = endToday.isBefore(start) ? endToday.add(1, "days") : endToday
 
     return {
-      hasNote,
+      hasNote: hasNote,
+      noteText: nodeText,
       start: start,
       end: end,
+      timerRunning: endTimeText == "",
       element: tableRow,
       id: `FertilizerEntry${tableRow.id}`,
     }

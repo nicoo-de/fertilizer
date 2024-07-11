@@ -14,7 +14,7 @@ function initialize() {
     const observer = new MutationObserver(() => {
       onChange()
     })
-    observer.observe(document, config)
+    observer.observe(document.getElementById("day-view-entries")!!, config)
   } catch (e) {
     console.error("Fertilizer: ", e)
     displayError()
@@ -22,6 +22,7 @@ function initialize() {
 }
 
 function onChange() {
+  console.log("onChange")
   const entries = findTimesheetEntries()
   const results = validateTimesheet(entries)
   markResults(results)
