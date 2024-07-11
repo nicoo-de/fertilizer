@@ -29,7 +29,7 @@ export function findTimesheetInTimeView(): Timesheet {
 
     const startTimeText = findTextContent(tableRow, ".entry-timestamp-start")
     const endTimeText = findTextContent(tableRow, ".entry-timestamp-end")
-    const noteText = findTextContent(tableRow, ".notes p")
+    const noteText = hasNote ? findTextContent(tableRow, ".notes p") : ""
 
     const start = parseTime(startTimeText)
     const endToday = endTimeText ? parseTime(endTimeText) : dayjs()
@@ -39,7 +39,6 @@ export function findTimesheetInTimeView(): Timesheet {
       hasNote: hasNote,
       start: start,
       end: end,
-      stillRunning: endTimeText === "",
       noteText: noteText,
       element: tableRow,
       id: `FertilizerEntry${tableRow.id}`,

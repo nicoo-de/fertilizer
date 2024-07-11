@@ -22,7 +22,7 @@ function findTextContent(tableRow: HTMLElement, selector: string) {
 function readEntries(tableRow: HTMLElement): TimesheetEntry {
   const hasNote = tableRow.querySelector(".time-entry-notes") !== null
   const startTimeText = findTextContent(tableRow, ".start-time")
-  const noteText = findTextContent(tableRow, ".notes p")
+  const noteText = hasNote ? findTextContent(tableRow, ".notes p") : ""
   const endTimeText = findTextContent(tableRow, ".end-time")
 
   const start = parseTime(startTimeText)
@@ -32,7 +32,6 @@ function readEntries(tableRow: HTMLElement): TimesheetEntry {
   return {
     hasNote: hasNote,
     start: start,
-    stillRunning: endTimeText === "",
     noteText: noteText,
     end: end,
     element: tableRow,
