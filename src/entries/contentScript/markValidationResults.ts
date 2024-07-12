@@ -4,9 +4,6 @@ import { ValidationResult } from "./ValidationResult"
 export function markResults(results: ValidationResult[]) {
   results.forEach((result) => {
     switch (result.gap.type) {
-      case "invalidCharacters":
-        markGap(result.entry, `Ungültige Zeichen gefunden (${result.gap.invalidCharacters})`, "rgb(255 0 0 / 24%)", "↑")
-        break
       case "break":
         markGap(result.entry, `${result.gap.minutes} Minuten Pause`, "rgb(142 223 142 / 37%)", "↕")
         break
@@ -22,7 +19,7 @@ export function markResults(results: ValidationResult[]) {
         markEntry(result.entry, "rgb(166 166 166 / 25%)")
         break
       case "invalidCharacters":
-        markEntry(result.entry, "rgb(255 0 0 / 24%)")
+        markEntry(result.entry, "rgb(252 186 3 / 24%)")
         break
       case "ok":
         unmarkEntry(result.entry)

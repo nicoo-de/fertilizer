@@ -1,7 +1,7 @@
 import dayjs from "dayjs"
 import { parseTime } from "./parseTime"
 import { Timesheet } from "./Timesheet"
-import {TimesheetEntry} from "~/entries/contentScript/TimesheetEntry";
+import { TimesheetEntry } from "~/entries/contentScript/TimesheetEntry"
 
 function findTimesheetElement() {
   const element = document.getElementById("day-view-entries")
@@ -29,17 +29,16 @@ export function findTimesheetInTimeView(): Timesheet {
 
     const startTimeText = findTextContent(tableRow, ".entry-timestamp-start")
     const endTimeText = findTextContent(tableRow, ".entry-timestamp-end")
-    const noteText = hasNote ? findTextContent(tableRow, ".notes p") : ""
+    const noteText = hasNote ? findTextContent(tableRow, ".notes p") : null
 
     const start = parseTime(startTimeText)
     const endToday = endTimeText ? parseTime(endTimeText) : dayjs()
     const end = endToday.isBefore(start) ? endToday.add(1, "days") : endToday
 
     return {
-      hasNote: hasNote,
       start: start,
       end: end,
-      noteText: noteText,
+      note: noteText,
       element: tableRow,
       id: `FertilizerEntry${tableRow.id}`,
     }
